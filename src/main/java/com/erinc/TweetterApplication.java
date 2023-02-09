@@ -23,7 +23,7 @@ public class TweetterApplication {
             switch (secim){
                 case 1:new UserProfileController().register();
                     break;
-                case 2:
+                case 2:new UserProfileController().login();
                     break;
                 case 3:
                     break;

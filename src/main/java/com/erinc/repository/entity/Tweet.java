@@ -25,5 +25,5 @@ public class Tweet extends BaseEntity{
     int tweetcomment;
     int tweetlike;
     int retweet;
-    int view;
+    int tweetview;
 }
