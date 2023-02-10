@@ -9,6 +9,7 @@ import com.erinc.utility.MyFactoryService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class TweetService extends MyFactoryService<TweetRepository, Tweet, Long> {
 
@@ -61,5 +62,26 @@ public class TweetService extends MyFactoryService<TweetRepository, Tweet, Long>
         return result;
     }
 
-
+    public Optional<VwTweet> findVwTweetById(Long id){
+        Optional<Tweet> tweet = findById(id);
+        if(tweet.isEmpty()) return Optional.empty();
+        UserProfile userProfile = userProfileService.findById(tweet.get().getUserid()).get();
+        VwTweet viewt = VwTweet.builder()
+                .id(tweet.get().getId())
+                .image(tweet.get().getImage())
+                .content(tweet.get().getContent())
+                .shareddate(tweet.get().getShareddate())
+                .retweetid(tweet.get().getRetweetid())
+                .tweetcomment(tweet.get().getTweetcomment())
+                .userid(tweet.get().getUserid())
+                .retweet(tweet.get().getRetweet())
+                .tweetview(tweet.get().getTweetview())
+                .tweetlike(tweet.get().getTweetlike())
+                .quotedtweetid(tweet.get().getQuotedtweetid())
+                .profileimg(userProfile.getProfileimg())
+                .nickName(userProfile.getName()+" "+userProfile.getSurname())
+                .username(userProfile.getUsername())
+                .build();
+        return Optional.of(viewt);
+    }
 }

@@ -1,9 +1,13 @@
 package com.erinc.controller;
 
+import com.erinc.repository.entity.Comment;
 import com.erinc.repository.entity.Tweet;
 import com.erinc.repository.entity.UserProfile;
+import com.erinc.repository.view.VwTweet;
+import com.erinc.repository.view.VwUserProfile;
 import com.erinc.service.*;
 
+import java.util.Map;
 import java.util.Scanner;
 
 public class TweetController {
@@ -54,7 +58,7 @@ public class TweetController {
             switch (secim){
                 case 1: createTweet();
                     break;
-                case 2:
+                case 2: listTweet();
                     break;
                 case 3:
                     break;
@@ -86,28 +90,83 @@ public class TweetController {
         System.out.println("***********************************");
         System.out.println();
         tweetService.findAllViewTweet().forEach(t->{
+
+        });
+
+        int secim;
+        do{
+            System.out.println("1- View");
+            System.out.println("2- <<< Back");
+            secim = secim();
+            if(secim == 1){
+                System.out.println("Hangi tweet'i görüntüleyeceksin?...: ");
+                int id = secim();
+                tweetDetails(id);
+            }
+        }while (secim!=0);
+    }
+
+    public void tweetDetails(long tweetId){
+        int secim;
+        do{
+            goruntulenmeArttir(tweetId);
+            VwTweet tweet = tweetService.findVwTweetById(tweetId).get();
+            Map<Long, VwUserProfile> userList = userProfileService.findAllVwUserList();
             System.out.println("-----------------------------------");
-            System.out.println(t.getNickName()+ " -> "+ t.getUsername());
+            System.out.println("tweetid........: "+tweet.getId());
+            System.out.println(tweet.getNickName()+ " -> "+ tweet.getUsername());
             System.out.println();
-            System.out.println(t.getContent());
+            System.out.println(tweet.getContent());
             System.out.println("??????????????");
             System.out.println("??????????????");
             System.out.println("??????????????");
             System.out.println("??????????????");
             System.out.printf("  Y[%s]     R[%s]      L[%s]     W[%s]   \n",
-                    t.getTweetcomment(),t.getRetweet(),t.getTweetlike(),t.getTweetview());
+                    tweet.getTweetcomment(),tweet.getRetweet(),tweet.getTweetlike(),tweet.getTweetview());
             System.out.println("-----------------------------------");
             System.out.println();
-        });
+            System.out.println("COMMENTS");
+            commentService.findByTweetId(tweetId).forEach(c->{
+                VwUserProfile user = userList.get(c.getUserid());
+                System.out.println(user.getUsername() + " " + c.getComment());
+            });
 
-
+            System.out.println("1- Yorum Yap");
+            System.out.println("2- Begeni Yap");
+            System.out.println("0- <<< Back");
+            System.out.print("Make Your Choose!!");
+            secim = secim();
+            switch (secim){
+                case 1: yorumYap(tweetId);
+                    break;
+                case 2:
+                    break;
+            }
+        }while(secim!=0);
     }
 
+    public void yorumYap(Long tweetId){
+        System.out.println("Yorum Yaz.....: ");
+        String yorum = ifade();
+        commentService.save(Comment.builder()
+                .userid(userProfile.getId())
+                .comment(yorum)
+                .tweetid(tweetId)
+                .commentdate(System.currentTimeMillis())
+                .build());
+    }
 
+    private void goruntulenmeArttir(Long tweetID){
+        Tweet tweet = tweetService.findById(tweetID).get();
+        tweet.setTweetview(tweet.getTweetview()+1);
+        tweetService.update(tweet);
+    }
 
-
-
-
+    private void yorumArttir(Long tweetID){
+        Tweet tweet = tweetService.findById(tweetID).get();
+        tweet.setTweetcomment(tweet.getTweetcomment()+1);
+        tweetService.update(tweet);
+    }
 
 
 

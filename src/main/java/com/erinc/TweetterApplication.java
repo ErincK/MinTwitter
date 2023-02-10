@@ -15,7 +15,7 @@ public class TweetterApplication {
             System.out.println();
             System.out.println("1- Sign in");
             System.out.println("2- Log in");
-            System.out.println("3- Tweetleri Gör");
+            System.out.println("3- View Tweets");
             System.out.println("0- Exit");
             System.out.println("Secim yapiniz....: ");
             secim = scanner.nextInt();

@@ -25,6 +25,17 @@ public class MyFactoryService<R extends MyFactoryRepository, T, ID> implements I
         repository.saveAll(entities);
         return entities;
     }
+    @Override
+    public <S extends T> S update(S entity) {
+        repository.update(entity);
+        return entity;
+    }
+
+    @Override
+    public <S extends T> Iterable<S> updateAll(Iterable<S> entities) {
+        repository.updateAll(entities);
+        return entities;
+    }
 
     @Override
     public void delete(T entity) {

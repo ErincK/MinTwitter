@@ -12,6 +12,10 @@ import javax.persistence.*;
 @ToString
 @Entity
 @Table(name = "tblcomment")
+@NamedQueries({
+        @NamedQuery(name = "Comment.findByTweetId",
+        query = "SELECT c From Comment c WHERE c.tweetid = :tweetid")
+})
 public class Comment extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

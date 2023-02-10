@@ -65,7 +65,33 @@ public class MyFactoryRepository<T, ID> implements ICrud<T, ID> {
             throw exception;
         }
     }
+    @Override
+    public <S extends T> S update(S entity) {
+        try{
+            openSession();
+            ss.update(entity);
+            closeSession();
+            return entity;
+        }catch (Exception exception){
+            tt.rollback();
+            throw exception;
+        }
+    }
 
+    @Override
+    public <S extends T> Iterable<S> updateAll(Iterable<S> entities) {
+        try{
+            openSession();
+            entities.forEach(entity->{
+                ss.update(entity);
+            });
+            closeSession();
+            return entities;
+        }catch(Exception exception){
+            tt.rollback();
+            throw exception;
+        }
+    }
     @Override
     public void delete(T entity) {
         try{
